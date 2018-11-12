@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta charset="UTF-8">
+<!-- jQuery -->
+	<script type="text/javascript" src = "../../bootstrap-3.3.7/jQuery/jquery.min.js"></script>
+<!-- css -->
+<link rel = "stylesheet" href = "../../bootstrap-3.3.7/css/bootstrap.min.css">
+<link rel = "stylesheet" href = "../../css&js/css/login.css">
+
+</head>
+<body class="container-fluid">
+	<div id = "login_box" class = "col-md-4 ">
+		<div class = "row" >
+			<h3 class ="col-sm-3 col-sm-offset-1" >登录</h3>
+		</div>
+		
+		<form role = "form" class = "form-horizontal" action = "../../LoginServlet" method="post" target="_parent">
+			<div class = "form-group">
+				<label for = "userId" class = "control-label col-sm-3">ID:</label>
+				<div class = "col-sm-9">
+					<input type = "text" id = "userId" name = "userId" class = "form-control" placeholder = "输入用户Id">
+				</div>
+			</div>
+			
+			<div class = "form-group">
+				<label for = "userPassword" class = "control-label col-sm-3">Key:</label>
+				<div class = "col-sm-9">
+					<input type = "password" id = "userPassword" name = "userPassword" class = "form-control" placeholder = "输入登录密码">
+				</div>
+			</div>
+			
+			<div class = "form-group">
+				<div class = "col-xs-1">
+					<input type="checkbox" id = "rememberMe" name = "rememberMe" class = "form-control">
+				</div>
+				<label for = "rememberMe" class = "control-label" id = "label_rememberMe">记住密码</label>
+				
+				<a href="regist.html">注册新用户</a>
+			</div>
+			
+			<div class = "form-group">
+				<div class = "col-sm-11 col-sm-offset-1">
+					<button class = "btn btn-success btn-block" id = "login_btn" type="submit">登录</button>
+				</div>
+			</div>
+		</form>
+	</div> 
+
+	<script type="text/javascript" src = "../../bootstrap-3.3.7/js/bootstrap.min.js"></script>
+ 	<script type="text/javascript" src = "../../css&js/js/login.js"></script>
+	</body>
+</html>
