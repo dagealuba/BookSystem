@@ -10,14 +10,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.jasper.tagplugins.jstl.core.Out;
 
-import com.mysql.jdbc.Driver;
 
 import entity.User;
 import factory.ServiceFactory;
 
-import com.mysql.cj.xdevapi.Statement;
+
 
 /**
  * Servlet implementation class LoginServlet
@@ -39,8 +37,7 @@ public class LoginServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		response.setContentType("UTF-8");
-		response.setCharacterEncoding("UTF-8");
+		request.setCharacterEncoding("UTF-8");
 		String userId = request.getParameter("userId");
 		String userPassword = request.getParameter("userPassword");
 		
@@ -51,10 +48,18 @@ public class LoginServlet extends HttpServlet {
 		
 		if (user != null) {
 			if (userPassword.equals(user.getUserPassword())) {
-				request.getSession().setAttribute("user", user);
-				response.sendRedirect(request.getContextPath()+"/jsp/main.jsp");
+				out.write("true");
+			}
+			else {
+				out.write("password_error");
 			}
 		}
+		else {
+			out.write("id_error");
+		}
+
+		out.flush();
+		out.close();
 	}
 
 	/**

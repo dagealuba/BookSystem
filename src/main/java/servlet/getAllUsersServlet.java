@@ -1,20 +1,18 @@
 package servlet;
 
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.List;
+import entity.User;
+import factory.DaoFactory;
+import net.sf.json.JSONArray;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-
-import entity.User;
-import factory.DaoFactory;
-import net.sf.json.JSONArray;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Servlet implementation class getAllUsersServlet
@@ -36,11 +34,17 @@ public class getAllUsersServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated thod stub
+		request.setCharacterEncoding("UTF-8");
+		response.setHeader("Content-type", "text/json;charset=UTF-8");
 		List<User> users = new ArrayList<User>();
 		users = DaoFactory.getUserDaoImpl().getAllUsers();
-		
+		for (User u: users){
+			System.out.println(u.getUserName());
+		}
+
 		PrintWriter out = response.getWriter();
 		if (!users.isEmpty()) {
+			System.out.println();
 			JSONArray jsonUsers = JSONArray.fromObject(users);
 			out.write(jsonUsers.toString());
 			out.flush();
