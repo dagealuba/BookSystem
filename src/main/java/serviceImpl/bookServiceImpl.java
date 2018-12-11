@@ -37,7 +37,7 @@ public class bookServiceImpl implements bookService {
 		else if (book.getBookAuthor()!=null&&!book.getBookAuthor().equals("")) {
 			books = DaoFactory.getBookDaoImpl().getBookByAuthor(book.getBookAuthor());
 		}
-		System.out.println(books.size());
+//		System.out.println(books.size());
 		return books;
 	}
 	

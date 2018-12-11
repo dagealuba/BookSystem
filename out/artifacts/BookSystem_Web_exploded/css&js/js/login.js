@@ -7,14 +7,12 @@ function login(){
     $.ajax({
         type:"post",
         data:user,
+        // data_type:"text",
         url:"/BookSystem/LoginServlet",
         success:function (data) {
+            // alert(data);
             if (data=="true"){
-                $.ajax({
-                    type:"post",
-                    url:"/BookSystem/LoginSuccessServlet",
-                    data:user
-                })
+                window.parent.location.href="/BookSystem/jsp/main.jsp";
             }
             else if (data=="password_error"){
                 var text="密码错误"

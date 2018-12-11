@@ -72,6 +72,36 @@ public class UserDaoImpl extends baseDao implements UserDao {
 	}
 
 	@Override
+	public  List<User> getUserByName(String userName){
+		List<User> users = new ArrayList<User>();
+		String sql = "select * from users where userName like ?";
+
+		userName = "%"+userName+"%";
+		Object[] params = {userName};
+//        System.out.println(userName);
+		resultSet = this.ExecuteQuery(sql,params);
+
+		try {
+			while(resultSet.next()) {
+				User user = new User();
+				user.setUserId(resultSet.getString("userId"));
+				user.setUserName(resultSet.getString("userName"));
+				user.setUserPassword(resultSet.getString("userPassword"));
+				user.setUserEmail(resultSet.getString("userEmail"));
+				user.setUserType(resultSet.getInt("userType"));
+
+//				System.out.println(user.getUserId());
+				users.add(user);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally {
+			this.closeResource();
+		}
+
+		return users;
+	}
+	@Override
 	public boolean add(User user) {
 		// TODO Auto-generated method stub
 

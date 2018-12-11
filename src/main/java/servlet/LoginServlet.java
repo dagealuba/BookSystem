@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 
-
+import com.alibaba.fastjson.JSON;
 import entity.User;
 import factory.ServiceFactory;
 
@@ -38,6 +38,7 @@ public class LoginServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		request.setCharacterEncoding("UTF-8");
+//		response.setContentType("text/json;charset=utf-8");
 		String userId = request.getParameter("userId");
 		String userPassword = request.getParameter("userPassword");
 		
@@ -45,9 +46,13 @@ public class LoginServlet extends HttpServlet {
 		
 		User user = null;
 		user = ServiceFactory.getUserServiveImpl().findUserById(userId);
-		
+//		System.out.println(userPassword.equals(user.getUserPassword()));
+
 		if (user != null) {
 			if (userPassword.equals(user.getUserPassword())) {
+				request.getSession().setAttribute("user",user);
+//				System.out.println(userPassword.equals(user.getUserPassword()));
+
 				out.write("true");
 			}
 			else {

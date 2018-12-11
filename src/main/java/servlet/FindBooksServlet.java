@@ -3,7 +3,9 @@ package servlet;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -12,7 +14,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 
+import com.alibaba.fastjson.JSON;
 import entity.Book;
+import entity.Comment;
+import entity.User;
 import factory.ServiceFactory;
 import net.sf.json.JSONArray;
 
@@ -65,7 +70,35 @@ public class FindBooksServlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		doGet(request, response);
+		request.setCharacterEncoding("utf-8");
+		response.setCharacterEncoding("utf-8");
+
+		String id = request.getParameter("id");
+		Book book = ServiceFactory.getBookServiceImpl().findBookById(id);
+
+		List<Comment> comments = new ArrayList<Comment>();
+
+		comments = ServiceFactory.getCommentServiceImpl().getCommentsByBookId(id);
+
+		List<String> userIds = new ArrayList<String>();
+		for (Comment comment:comments){
+			userIds.add(comment.getUserId());
+		}
+
+		List<User> users = new ArrayList<User>();
+		users = ServiceFactory.getUserServiveImpl().findUserById(userIds);
+
+		Map result = new HashMap();
+		result.put("book",book);
+		result.put("comments",comments);
+		result.put("users",users);
+
+		String json = JSON.toJSONString(result);
+		PrintWriter out = response.getWriter();
+
+		out.write(json);
+		out.flush();
+		out.close();
 	}
 
 }

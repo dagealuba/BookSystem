@@ -15,21 +15,46 @@ $(document).ready(function() {
 	$("#find-books").click(function() {
 		var bookName = $("#bookName").val();
 		var bookAuthor = $("#bookAuthor").val();
-		var params = $("form").serialize();
+		var params = {
+			"bookName":$("#bookName").val(),
+			"bookAuthor":$("#bookAuthor").val()
+		}
 		
 		$("#error").empty("div");
 		$("tbody").empty();
 		$("#table-foot").empty();
 
-		xmlReq = getXMLHttpRequest();
-		
-		if (xmlReq != null){
-			xmlReq.open("post", "http://localhost:8080/BookSystem/FindBooksServlet",true);
-			xmlReq.onreadystatechange = requestCallBack;
-			xmlReq.setRequestHeader("Content-type", "application/x-www-form-urlencoded; charset=UTF-8");
-			xmlReq.send(params);
-		}
-		
+		// xmlReq = getXMLHttpRequest();
+		//
+		// if (xmlReq != null){
+		// 	xmlReq.open("get", "http://localhost:8080/BookSystem/FindBooksServlet",true);
+		// 	xmlReq.onreadystatechange = requestCallBack;
+		// 	xmlReq.setRequestHeader("Content-type", "application/x-www-form-urlencoded; charset=UTF-8");
+		// 	xmlReq.send(params);
+		// }
+		//
+
+		$.ajax({
+			type:"get",
+			url: "/BookSystem/FindBooksServlet",
+			data: params,
+			success: function (data) {
+				data = eval(data);
+				pages = getAllPages(data);
+
+				if (pages.length>0){//查到了书，打印结果
+					now_page = 1;
+					printPages(pages,now_page);
+					printButton();
+				}
+				else {
+					printNO();
+				}
+
+			}
+		});
+
+
 	})
 	
 	$("#page_lines").change(function() {
@@ -81,45 +106,105 @@ function printPages(pages,i){
 		var price = pages[i-1][j].bookPrice;
 		var now_num = pages[i-1][j].now_num;
 		var publishName = pages[i-1][j].publishName;
-		var button = "<td><span class='glyphicon glyphicon-plus'></span><span class='glyphicon glyphicon-shopping-cart'></span></td>"
+		var button = "<td><span class='glyphicon glyphicon-plus' data-toggle='tooltip' title='添加置购物车'></span><span class='glyphicon glyphicon-comment' data-toggle='tooltip' title='查看评论'></span></td>"
 		node += "<tr><td class='hidden'>"+id+"</td><td>"+name+"</td>";
 		node += "<td>"+author+"</td>";
 		node += "<td>"+publishName+"</td>";
 		node += "<td>"+price+"</td>";
 		node += "<td>"+now_num+"</td>"+button+"</tr>";
-		
+
+
+		node = $(node);
+		node.fadeToggle();
 //		alert(node);
 		$("tbody").append(node);
-	}
 
-}
-
-
-function requestCallBack() {
-	if (xmlReq.readyState == 4) {
-        if (xmlReq.status == 200) {
-        	var result = xmlReq.responseText;
-        	result = eval(result);
-        	pages = getAllPages(result);
-        	
-        	if (pages.length>0){//查到了书，打印结果
-        		now_page = 1;
-        		printPages(pages,now_page);
-        		printButton();
-        		
-
-        	}
-        	else {
-				printNO();
+		//查看评论
+		$(".glyphicon-comment").click(function () {
+			var id = $(this).parent().parent().children(".hidden").text();
+			id = {
+				"id":id
 			}
-        	
-        }
+			
+			$("#bookPage").modal();
+
+			$("#bookPage").on("shown.bs.modal",function () {
+				$.ajax({
+					type:"post",
+					url:"/BookSystem/FindBooksServlet",
+					data:id,
+					dataType: "json",
+					success:function (data) {
+						$("#comment-box").empty();
+						// data =
+						$("#book-name").html(data.book.bookName);
+						$("#book-author").html(data.book.bookAuthor);
+						$("#publish-name").html(data.book.publishName);
+						$("#num").html(data.book.num);
+						$("#now-num").html(data.book.now_num);
+						$("#price").html(data.book.bookPrice);
+
+						if (data.comments.length == 0){
+							var node = "\n" +
+                                "<div class=\"alert alert-dismissable\">\n" +
+                                " <span style='color: gray'>暂无评论</span>\n" +
+                                "</div>\n";
+							node = $(node);
+							// node.fadeToggle();
+							$("#comment-box").prepend(node);
+						}
+						else {
+							for (var i=0;i<data.comments.length;i++){
+								var node = ""
+							}
+						}
+                    }
+				})
+            })
+        });
+
+		//添加至购物车
+		$(".glyphicon-plus").click(function () {
+
+        });
 	}
+
 }
+
+
+// function requestCallBack() {
+// 	if (xmlReq.readyState == 4) {
+//         if (xmlReq.status == 200) {
+//         	var result = xmlReq.responseText;
+//         	result = eval(result);
+//         	pages = getAllPages(result);
+//
+//         	if (pages.length>0){//查到了书，打印结果
+//         		now_page = 1;
+//         		printPages(pages,now_page);
+//         		printButton();
+//
+//
+//         	}
+//         	else {
+// 				printNO();
+// 			}
+//
+//         }
+// 	}
+// }
 
 //没查到书
 function printNO(){
-	$("#error").append("<div class='col-md-3 col-md-offset-4'><h2><small>没有找到相关书籍<small></h2></div>")
+    var node=" <div class=\"alert alert-danger\">\n" +
+        "                        <a class=\"close\" data-dismiss=\"alert\" href=\"#\" aria-hidden=\"true\">\n" +
+        "                            &times;\n" +
+        "                        </a>\n" +
+        "                        <strong>错误!</strong>没有找到相关书籍！！\n" +
+        "                    </div>"
+    node=$(node);
+    node.fadeToggle();
+    $("#error").prepend(node);
 }
 
 //显示分页按钮
@@ -163,9 +248,9 @@ function printButton(){
 }
 
 //上一页
-function oldPage(){
-	$(".pagination ").children()
-}
+// function oldPage(){
+// 	$(".pagination ").children()
+// }
 function oldPage(){
 	now_page--;
 	printPages(pages, now_page);
@@ -193,7 +278,7 @@ function canClick(){
 	if (now_page == 1){
 		$(".pagination").children("li").children(".old-page").parent("li").attr("class", "disabled");
 	}
-	else if (now_page == pages.length){
+	if (now_page == pages.length){
 		$(".pagination").children("li").children(".next-page").parent("li").attr("class","disabled");
 	}
 	

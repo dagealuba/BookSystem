@@ -48,8 +48,29 @@
 	
 	<iframe id = "iframe" name ="iframe" src = "findbooks.jsp" width="100%" style="border:none" height="590px"></iframe>
 
+    <div id="showcart">
+        <button type="button" class="btn btn-success btn-block" data-toggle="modal" href="#my-cart">
+            <span class="glyphicon glyphicon-shopping-cart"></span>
+        </button>
+    </div>
 
-	<div class="modal fade" id="myMessage" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal fade" id="my-cart" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h4>购物车</h4>
+                </div>
+                <div class="modal-body">
+
+                </div>
+                <%--<div class="modal-footer">--%>
+                <%--</div>--%>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div>
+
+    <div class="modal fade" id="myMessage" tabindex="-1" role="dialog" aria-hidden="true">
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header">
@@ -143,6 +164,7 @@
 
 		</div>
 	</div>
+
 	<!-- js -->
 	<script type="text/javascript" src = "../bootstrap-3.3.7/js/bootstrap.min.js"></script>
 	<script type="text/javascript" src = "../css&js/js/main.js"></script>

@@ -12,6 +12,8 @@ public interface UserDao {
     //查询部分信息
     public User getUserById(String userId);
 
+    public List<User> getUserByName(String userName);
+
     //增
     public boolean add(User user);
 

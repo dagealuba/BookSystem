@@ -38,18 +38,27 @@ public class getAllUsersServlet extends HttpServlet {
 		response.setHeader("Content-type", "text/json;charset=UTF-8");
 		List<User> users = new ArrayList<User>();
 		users = DaoFactory.getUserDaoImpl().getAllUsers();
+
+		User user = (User)request.getSession().getAttribute("user");
+
 		for (User u: users){
-			System.out.println(u.getUserName());
+			if (u.getUserId().equals(user.getUserId())){
+				users.remove(u);
+				break;
+			}
 		}
 
 		PrintWriter out = response.getWriter();
 		if (!users.isEmpty()) {
-			System.out.println();
 			JSONArray jsonUsers = JSONArray.fromObject(users);
+//			System.out.println(jsonUsers);
 			out.write(jsonUsers.toString());
-			out.flush();
-			out.close();
 		}
+		else {
+			out.write("{\"flag\":\"empty\"}");
+		}
+		out.flush();
+		out.close();
 	}
 
 	/**

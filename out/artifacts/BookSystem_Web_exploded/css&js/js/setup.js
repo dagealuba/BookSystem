@@ -1,14 +1,7 @@
 //设置页面
+var searchUsers=null;
+var searchBooks=null;
 
-// //active状态切换
-// function changeActive(){
-// 	$("ul.dropdown-menu").children("li").click(function() {
-// 		if (!$(this).hasClass("active")){
-// 			$("ul.dropdown-menu").children("li.active").removeClass("active");
-// 		}
-// 	})
-//
-// }
 
 function addbooks(){
 	var bookName = $("#bookName").val();
@@ -16,57 +9,78 @@ function addbooks(){
 	var publishName = $("#publishName").val();
 	var bookPrice = $("#bookPrice").val();
 	var num = $("#num").val();
-	var now_num = num;
+	// var now_num = num;
 
 	var book = {
 		"bookName":bookName,
 		"bookAuthor":bookAuthor,
 		"publishName":publishName,
 		"bookPrice":bookPrice,
-		"now_num":now_num,
+		// "now_num":now_num,
 		"num":num
-	}
+	};
+
+	// alert(book.bookName);
 
 	$.ajax({
-		type:"post"
+		type:"post",
+        data:book,
+        url:"/BookSystem/AddBookServlet",
+        success:function (data) {
+            // alert(data);
+        },
+        error:function (data) {
+
+        }
 	})
 
 }
 
 function getAllUsers(){
+	var users=null;
 	$.ajax({
 		type:"get",
 		url:"/BookSystem/getAllUsersServlet",
 		success:function (data) {
-			$("#userSetup tbody").empty();
-			$("#error").empty();
-			for (var i=0;i<data.length;++i){
-				var userName = data[i].userName;
-				var id = data[i].userId;
-				var email = data[i].userEmail;
-				var type = data[i].userType;
+			if (data.flag!="empty"){
+                $("#userSetup tbody").empty();
+                for (var i=0;i<data.length;++i){
+                    var userName = data[i].userName;
+                    var id = data[i].userId;
+                    var email = data[i].userEmail;
+                    var type = data[i].userType;
 
-				var node = "";
-				node += "<tr class='each_user'><td class='userId'>"+id+"</td>";
-				node += "<td>"+userName+"</td>";
-				node += "<td>"+email+"</td>";
-				if (type === 1){
-					node += "<td>用户</td>";
-				}
-				else node += "<td>管理员</td>";
+                    var node = "";
+                    node += "<tr class='each_user'><td class='userId'>"+id+"</td>";
+                    node += "<td>"+userName+"</td>";
+                    node += "<td>"+email+"</td>";
+                    if (type === 1){
+                        node += "<td>用户</td>";
+                    }
+                    else node += "<td>管理员</td>";
 
-				node += "<td><span class='glyphicon glyphicon-trash' style='color: red'></span></td></tr>"
+                    node += "<td class='col-xs-3'><span class='glyphicon glyphicon-refresh'></span><span class='glyphicon glyphicon-trash' style='color: red;padding-left: 15px'></span></td></tr>"
+                    node = $(node);
+                    node.fadeToggle();
+                    $("#users_table tbody").append(node);
 
-				$("#users_table tbody").append(node);
 
-
+                }
+                $(".glyphicon-trash").click(function () {
+                    deleteUser($(this));
+                });
+                $(".glyphicon-refresh").click(function () {
+					resetUserPassword($(this));
+                });
+                $(".glyphicon").hover(function () {
+					$(this).css("font-size","110%");
+                },function () {
+					$(this).css("font-size","100%");
+                })
+                $(".each_user").click(function () {
+                    getUserMessage($(this));
+                })
 			}
-            $(".glyphicon-trash").click(function () {
-                deleteUser($(this));
-            })
-			$(".each_user").click(function () {
-				getUserMessage($(this));
-            })
         },
 		error:function () {
 			$("#userSetup tbody").empty();
@@ -78,13 +92,40 @@ function getAllUsers(){
 
 function deleteUser(obj) {
 	obj = obj.parent().parent();
-	var id = { "userId":obj.children(".userId")};
+	var id = { "userId":obj.children(".userId").text()};
 	$.ajax({
-		type:"post",
+		type:"get",
 		data:id,
-		url: "/BookSystem/DeletUserServlet",
+		url: "/BookSystem/DeleteUserServlet",
 		success:function (data) {
-			
+			// alert(typeof data);
+			if (data=="no-power"){
+                var node=" <div class=\"alert alert-danger\">\n" +
+                    "                        <a class=\"close\" data-dismiss=\"alert\" href=\"#\" aria-hidden=\"true\">\n" +
+                    "                            &times;\n" +
+                    "                        </a>\n" +
+                    "                        <strong>错误!</strong>没有权限！！\n" +
+                    "                    </div>"
+                node=$(node);
+                node.fadeToggle();
+                $("#userSetup").prepend(node);
+			}
+			else if (data=="false"){
+                var node=" <div class=\"alert alert-danger\">\n" +
+                    "                        <a class=\"close\" data-dismiss=\"alert\" href=\"#\" aria-hidden=\"true\">\n" +
+                    "                            &times;\n" +
+                    "                        </a>\n" +
+                    "                        <strong>错误!</strong>删除失败,请稍后重试\n" +
+                    "                    </div>"
+                node=$(node);
+                node.fadeToggle();
+                $("#userSetup").prepend(node);
+			}
+			else if (data=="true"){
+				obj.fadeOut();
+			}
+
+
         },
 		error:function () {
 			
@@ -92,8 +133,126 @@ function deleteUser(obj) {
 	})
 }
 
-function getUserMessage(obj){
+function resetUserPassword(obj) {
+    obj = obj.parent().parent();
+    var id = { "userId":obj.children(".userId").text()};
+    
+    $.ajax({
+		type:"get",
+		data:id,
+		url:"/BookSystem/ResetUserPasswordServlet",
+		success:function (data) {
+            if (data=="no-power"){
+                var node=" <div class=\"alert alert-danger\">\n" +
+                    "                        <a class=\"close\" data-dismiss=\"alert\" href=\"#\" aria-hidden=\"true\">\n" +
+                    "                            &times;\n" +
+                    "                        </a>\n" +
+                    "                        <strong>错误!</strong>没有权限！！\n" +
+                    "                    </div>"
+                node=$(node);
+                node.fadeToggle();
+                $("#userSetup").prepend(node);
+            }
+            else if (data=="false"){
+                var node=" <div class=\"alert alert-danger\">\n" +
+                    "                        <a class=\"close\" data-dismiss=\"alert\" href=\"#\" aria-hidden=\"true\">\n" +
+                    "                            &times;\n" +
+                    "                        </a>\n" +
+                    "                        <strong>错误!</strong>重置失败,请稍后重试\n" +
+                    "                    </div>"
+                node=$(node);
+                node.fadeToggle();
+                $("#userSetup").prepend(node);
+            }
+            else if (data=="true"){
+                var node=" <div class=\"alert alert-success\">\n" +
+                    "                        <a class=\"close\" data-dismiss=\"alert\" href=\"#\" aria-hidden=\"true\">\n" +
+                    "                            &times;\n" +
+                    "                        </a>\n" +
+                    "                        重置成功\n" +
+                    "                    </div>"
+                node=$(node);
+                node.fadeToggle();
+                $("#userSetup").prepend(node);
+            }
+        }
+	})
+}
 
+function getSomeUsers() {
+	var message = $("#searchUserForm").serialize();
+	// alert(message);
+	$.ajax({
+		type:"get",
+		data:message,
+		url:"/BookSystem/SearchUserServlet",
+		success:function (data) {
+            if (data.flag!="empty"){
+                $("#userSetup tbody").empty();
+                for (var i=0;i<data.length;++i){
+                    var userName = data[i].userName;
+                    var id = data[i].userId;
+                    var email = data[i].userEmail;
+                    var type = data[i].userType;
+
+                    var node = "";
+                    node += "<tr class='each_user'><td class='userId'>"+id+"</td>";
+                    node += "<td>"+userName+"</td>";
+                    node += "<td>"+email+"</td>";
+                    if (type === 1){
+                        node += "<td>用户</td>";
+                    }
+                    else node += "<td>管理员</td>";
+
+                    node += "<td class='col-xs-3'><span class='glyphicon glyphicon-refresh'></span><span class='glyphicon glyphicon-trash' style='color: red;padding-left: 15px'></span></td></tr>"
+                    node = $(node);
+                    node.fadeToggle();
+                    $("#users_table tbody").append(node);
+
+
+                }
+                $(".glyphicon-trash").click(function () {
+                    deleteUser($(this));
+                });
+                $(".glyphicon-refresh").click(function () {
+                    resetUserPassword($(this));
+                });
+                $(".glyphicon").hover(function () {
+                    $(this).css("font-size","110%");
+                },function () {
+                    $(this).css("font-size","100%");
+                })
+                $(".each_user").click(function () {
+                    getUserMessage($(this));
+                })
+            }
+			else {
+                var node=" <div class=\"alert alert-warning\">\n" +
+                    "                        <a class=\"close\" data-dismiss=\"alert\" href=\"#\" aria-hidden=\"true\">\n" +
+                    "                            &times;\n" +
+                    "                        </a>\n" +
+                    "                        没有找到相关用户！！\n" +
+                    "                    </div>"
+                node=$(node);
+                node.fadeToggle();
+                $("#userSetup").prepend(node);
+			}
+        },
+		error:function () {
+            var node=" <div class=\"alert alert-danger\">\n" +
+                "                        <a class=\"close\" data-dismiss=\"alert\" href=\"#\" aria-hidden=\"true\">\n" +
+                "                            &times;\n" +
+                "                        </a>\n" +
+                "                        <strong>错误!</strong>查询失败,请稍候重试！！\n" +
+                "                    </div>";
+            node=$(node);
+            node.fadeToggle();
+            $("#userSetup").prepend(node);
+        }
+    })
+}
+
+function getUserMessage(obj){
 }
 
 function getAllBooks(){
@@ -111,6 +270,10 @@ $(document).ready(function() {
 		else if (activeTab==="书籍管理"){
 			getAllBooks();
 		}
+    })
+
+	$("#searchUsers").click(function () {
+		getSomeUsers();
     })
 
 	$("#add_books").click(function () {

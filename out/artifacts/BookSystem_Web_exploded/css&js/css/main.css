@@ -14,3 +14,33 @@
     padding-left: 10px;
     font-size: 80%;
 }
+
+#showcart{
+	width: 50px;
+	height: 40px;
+	position: fixed;
+	right: 2%;
+	top: 11%;
+}
+
+.modal-backdrop {
+	filter: alpha(opacity=0)!important;
+	opacity: 0!important;
+}
+
+.img-thumbnail{
+	height: 200px;
+	width: 150px;
+}
+
+#book-img{
+	left: 2%;
+}
+
+.row div.row{
+	padding-bottom: 20px;
+}
+
+#publish-name{
+	margin-left: -15%;
+}

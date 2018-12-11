@@ -29,8 +29,10 @@ public interface userService {
 	 * 返回用户的所有信息
 	 * */
 	public User findUserById(String userId);
+
+	public List<User> findUserById(List<String> userIds);
 	
-	
+	public List<User> findUserByName(String userName);
 	/*
 	 * 获取所有用户信息
 	 * */

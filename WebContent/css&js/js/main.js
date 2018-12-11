@@ -42,6 +42,8 @@ function pencil_btn(){
                         "                        </a>\n" +
                         "                        <strong>错误!</strong>密码错误！！\n" +
                         "                    </div>"
+                    node=$(node);
+                    node.fadeToggle();
                     $(".modal-body").prepend(node);
                 }
             },
@@ -52,6 +54,8 @@ function pencil_btn(){
                     "                        </a>\n" +
                     "                        <strong>错误!</strong>请求错误请稍后重试！！\n" +
                     "                    </div>"
+                node=$(node);
+                node.fadeToggle();
                 $(".modal-body").prepend(node);
             }
         })

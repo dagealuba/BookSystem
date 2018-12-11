@@ -1,5 +1,6 @@
 package serviceImpl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import entity.User;
@@ -59,6 +60,25 @@ public class userServiceImpl implements userService {
 		return DaoFactory.getUserDaoImpl().getUserById(userId);
 	}
 
+	@Override
+	public List<User> findUserByName(String userName){
+		return DaoFactory.getUserDaoImpl().getUserByName(userName);
+	}
+
+	@Override
+	public  List<User> findUserById(List<String> userIds){
+		List<User> users = new ArrayList<User>();
+
+		for (String userId:userIds){
+			User user = null;
+			user = DaoFactory.getUserDaoImpl().getUserById(userId);
+			if (user != null){
+				users.add(user);
+			}
+		}
+
+		return users;
+	}
 	@Override
 	public List<User> findAllUsers() {
 		// TODO Auto-generated method stub
