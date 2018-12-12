@@ -8,6 +8,8 @@ public interface CommentDao {
     //根据书籍id查评论
     public List<Comment> getComment(String bookId);
 
+    public Comment getComment(int commentId);
+
     //根据评论id删除评论
     public boolean deleteComment(int commentId);
 

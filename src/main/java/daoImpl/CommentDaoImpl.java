@@ -4,13 +4,11 @@ import dao.CommentDao;
 import dao.baseDao;
 import entity.Comment;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class CommentDaoImpl extends baseDao implements CommentDao {
@@ -21,7 +19,7 @@ public class CommentDaoImpl extends baseDao implements CommentDao {
     @Override
     public List<Comment> getComment(String bookId){
         List<Comment> comments = new ArrayList<Comment>();
-        String sql = "select * from comment where bookId=? order by time desc";
+        String sql = "select * from comment where bookId=? order by time asc";
 
         Object[] parmas = {bookId};
         resultSet = this.ExecuteQuery(sql,parmas);
@@ -43,10 +41,33 @@ public class CommentDaoImpl extends baseDao implements CommentDao {
             this.closeResource();
         }
 
-
+//        System.out.println(bookId);
         return comments;
     }
 
+    @Override
+    public Comment getComment(int commentId){
+        String sql = "select * from comment where commentId = ?";
+        Object[] params = {commentId};
+
+        Comment comment = new Comment();
+        resultSet = this.ExecuteQuery(sql,params);
+        try{
+            while (resultSet.next()){
+                comment.setCommentText(resultSet.getString("commentText"));
+                comment.setCommentId(resultSet.getInt("commentId"));
+                comment.setBookId(resultSet.getString("bookId"));
+                comment.setUserId(resultSet.getString("userId"));
+                comment.setTime(resultSet.getTimestamp("time"));
+            }
+        }catch (SQLException e){
+            e.printStackTrace();
+        }finally {
+            this.closeResource();
+        }
+
+        return comment;
+    }
     @Override
     public boolean deleteComment(int commentId){
         String sql = "delete from comment where commentId = ?";
@@ -57,7 +78,7 @@ public class CommentDaoImpl extends baseDao implements CommentDao {
 
     @Override
     public boolean insertComment(Comment comment){
-        String sql = "inset into comment(bookId,userId,commentText) values(?,?,?)";
+        String sql = "insert into comment(bookId,userId,commentText) values(?,?,?)";
 
         String bookId = comment.getBookId();
         String userId = comment.getUserId();

@@ -1,5 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ page import = "entity.User" %>
+<% String path = request.getContextPath(); %>
+<% User user = (User)request.getSession().getAttribute("user");%>
+<%--<% String userName = user.getUserName(); %>--%>
+<%--<% int userType = user.getUserType(); %>--%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -14,6 +19,8 @@
 
 </head>
 <body class = "container">
+    <input class="hidden" id="user-type" value="<%= user.getUserType()%>">
+    <input class="hidden" id="user-id" value="<%=user.getUserId()%>">
 	<div class = "row">
 		<div class = "col-md-1">
 			<h4 >找书</h4>
@@ -154,11 +161,11 @@
 								</div>
 								<form class="form-horizontal" role="form" id="new-comment">
 									<div class="form-group">
-										<textarea class="form-control" rows="3" placeholder="说些什么吧" style="width:90%;margin-left: 5%"></textarea>
+										<textarea id="commentText" class="form-control" rows="3" placeholder="说些什么吧" style="width:90%;margin-left: 5%"></textarea>
 									</div>
 
 									<div class="col-xs-12">
-										<button type="button" class="btn btn-success pull-right">发表</button>
+										<button type="button" class="btn btn-success pull-right" id="submit-comment">发表</button>
 									</div>
 								</form>
 							</div>

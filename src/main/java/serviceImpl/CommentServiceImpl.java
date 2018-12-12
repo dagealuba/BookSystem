@@ -13,6 +13,10 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
+    public Comment getCommentByCommentId(int commentId){
+        return DaoFactory.getCommentDaoImpl().getComment(commentId);
+    }
+    @Override
     public boolean newComment(Comment comment) {
         return DaoFactory.getCommentDaoImpl().insertComment(comment);
     }

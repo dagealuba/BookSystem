@@ -8,6 +8,7 @@ public interface CommentService {
     //获得某书籍的评论
     public List<Comment> getCommentsByBookId(String bookId);
 
+    public Comment getCommentByCommentId(int commentId);
     //发表评论
     public boolean newComment(Comment comment);
 

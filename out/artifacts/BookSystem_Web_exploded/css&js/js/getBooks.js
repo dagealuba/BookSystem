@@ -10,6 +10,7 @@ var pages;
 var page_lines = 1;
 var xmlReq = null;
 var now_page = -1;
+var commentsdata = null;
 
 $(document).ready(function() {
 	$("#find-books").click(function() {
@@ -129,37 +130,27 @@ function printPages(pages,i){
 			$("#bookPage").modal();
 
 			$("#bookPage").on("shown.bs.modal",function () {
-				$.ajax({
-					type:"post",
-					url:"/BookSystem/FindBooksServlet",
-					data:id,
-					dataType: "json",
-					success:function (data) {
-						$("#comment-box").empty();
-						// data =
-						$("#book-name").html(data.book.bookName);
-						$("#book-author").html(data.book.bookAuthor);
-						$("#publish-name").html(data.book.publishName);
-						$("#num").html(data.book.num);
-						$("#now-num").html(data.book.now_num);
-						$("#price").html(data.book.bookPrice);
+				getComments(id);
 
-						if (data.comments.length == 0){
-							var node = "\n" +
-                                "<div class=\"alert alert-dismissable\">\n" +
-                                " <span style='color: gray'>暂无评论</span>\n" +
-                                "</div>\n";
-							node = $(node);
-							// node.fadeToggle();
-							$("#comment-box").prepend(node);
-						}
-						else {
-							for (var i=0;i<data.comments.length;i++){
-								var node = ""
-							}
-						}
+				$("#submit-comment").click(function () {
+				    var comment = {
+				        "userId":$("#user-id").val(),
+                        "bookId":id.id,
+                        "commentText":$("#commentText").val()
                     }
-				})
+					$.ajax({
+						type:"post",
+                        data:comment,
+                        url:"/BookSystem/NewCommentsServlet",
+                        success:function (data) {
+                            if (data=="true"){
+                                getComments(id);
+                            }
+
+                        }
+					})
+                });
+
             })
         });
 
@@ -171,28 +162,157 @@ function printPages(pages,i){
 
 }
 
+function getComments(id) {
+    $.ajax({
+        type:"post",
+        url:"/BookSystem/FindBooksServlet",
+        data:id,
+        dataType: "json",
+        success:function (data) {
+            $("#comment-box").empty();
+            // data =
+            $("#book-name").html(data.book.bookName);
+            $("#book-author").html(data.book.bookAuthor);
+            $("#publish-name").html(data.book.publishName);
+            $("#num").html(data.book.num);
+            $("#now-num").html(data.book.now_num);
+            $("#price").html(data.book.bookPrice);
 
-// function requestCallBack() {
-// 	if (xmlReq.readyState == 4) {
-//         if (xmlReq.status == 200) {
-//         	var result = xmlReq.responseText;
-//         	result = eval(result);
-//         	pages = getAllPages(result);
-//
-//         	if (pages.length>0){//查到了书，打印结果
-//         		now_page = 1;
-//         		printPages(pages,now_page);
-//         		printButton();
-//
-//
-//         	}
-//         	else {
-// 				printNO();
-// 			}
-//
-//         }
-// 	}
-// }
+            if (data.comments.length == 0){
+                var node = "\n" +
+                    "<div class=\"alert alert-dismissable\">\n" +
+                    " <span style='color: gray'>暂无评论</span>\n" +
+                    "</div>\n";
+                node = $(node);
+                // node.fadeToggle();
+                $("#comment-box").prepend(node);
+            }
+            else {
+                printComments(data);
+            }
+        }
+    });
+}
+
+function printComments(data) {
+    for (var i=0;i<data.comments.length;i++){
+        var time = data.comments[i].time;
+        var stime = RiQi(time);
+        var node = "<div class='panel panel-default'>" +
+            "<div class='panel-heading'>" +
+            "<span class='hidden'>"+data.comments[i].commentId+"</span>" +
+            "<h5 class='panel-title'>"+data.users[i].userName+"<small class='pull-right'>"+stime+"</small></h5>" +
+            "</div>" +
+            "<div class='panel-body'>" +
+            data.comments[i].commentText +
+            "</div>" +
+            "</div>";
+
+        node = $(node);
+        if ($("#user-id").val()==data.users[i].userId){
+            // node.children(".panel-heading").children().children().append("<span style='color: red' class='glyphicon glyphicon-trash'></span>");
+            node.children(".panel-heading").children("h5").children("small").append("<span class='glyphicon glyphicon-pencil updateComment'></span>");
+        }
+        // alert(node.children(".panel-heading").children().children().text());
+        if ($("#user-type").val()>=2||$("#user-id").val()==data.users[i].userId){
+            node.children(".panel-heading").children("h5").children("small").append("<span style='color: red' class='glyphicon glyphicon-trash deleteComment'></span>");
+        }
+
+        // alert()
+
+        node.fadeToggle();
+        $("#comment-box").prepend(node);
+
+        node.children(".panel-heading").children().children().children(".glyphicon-trash").click(function () {
+            deleteComment($(this));
+        });
+
+        node.children(".panel-heading").children().children().children(".glyphicon-pencil").click(function () {
+            updateComment($(this));
+        });
+
+
+
+
+    }
+}
+
+//删除评论
+function deleteComment(obj) {
+    obj = obj.parent().parent().parent();
+
+    // alert(obj.html());
+
+    var commentId = obj.children(".hidden").text();
+    commentId = {
+        "commentId":commentId
+    }
+
+    // alert(commentId);
+    $.ajax({
+        type:"get",
+        data:commentId,
+        url:"/BookSystem/CommentServlet",
+        success:function (data) {
+            if (data=="true"){
+                obj.parent().fadeToggle();
+            }
+            else {
+                var node=" <div class=\"alert alert-danger\">\n" +
+                    "                        <a class=\"close\" data-dismiss=\"alert\" href=\"#\" aria-hidden=\"true\">\n" +
+                    "                            &times;\n" +
+                    "                        </a>\n" +
+                    "                        删除失败！！\n" +
+                    "                    </div>"
+                node=$(node);
+                node.fadeToggle();
+                obj.parent().before(node);
+            }
+
+
+        }
+    })
+}
+
+//修改评论
+function updateComment(obj) {
+    obj = obj.parent().parent().parent().parent();
+    var commenttext = prompt("修改评论内容：");
+    commenttext = {
+        "commentText":commenttext,
+        "commentId":obj.children(".panel-heading").children(".hidden").text()
+    }
+
+    $.ajax({
+        type:"post",
+        data:commenttext,
+        url:"/BookSystem/CommentServlet",
+        success:function (data) {
+            // alert(typeof );
+            if(data.flag=="true"){
+                var id = {
+                    "id":data.bookId
+                }
+                // alert(data.bookId);
+                getComments(id);
+            }
+            else if (data.flag=="false"){
+                var node=" <div class=\"alert alert-danger\">\n" +
+                    "                        <a class=\"close\" data-dismiss=\"alert\" href=\"#\" aria-hidden=\"true\">\n" +
+                    "                            &times;\n" +
+                    "                        </a>\n" +
+                    "                        删除失败！！\n" +
+                    "                    </div>"
+                node=$(node);
+                node.fadeToggle();
+                obj.before(node);
+            }
+
+        }
+    })
+
+
+}
 
 //没查到书
 function printNO(){
@@ -310,4 +430,16 @@ function min(i,j){
 
 function getXMLHttpRequest(){
 	return new XMLHttpRequest;
+}
+
+function RiQi(sj) {
+    var now = new Date(sj);
+    var   year=now.getFullYear();
+    var   month=now.getMonth()+1;
+    var   date=now.getDate();
+    var   hour=now.getHours();
+    // alert(now.toTimeString());
+    var   minute=now.getMinutes();
+    // var   second=now.getSeconds();
+    return   year+"-"+month+"-"+date+"   "+hour+":"+minute;
 }
