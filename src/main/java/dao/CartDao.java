@@ -1,12 +1,13 @@
 package dao;
 
 
+import entity.Borrow;
 import entity.Cart;
 
+import java.util.List;
 import java.util.Map;
 
 public interface CartDao {
-    byte[] findByUserId(String userId);
-    void addBookToCart(String userId, byte[] book);
-    void addCart(String userId);
+    //查询订单
+//    public List<Borrow>
 }

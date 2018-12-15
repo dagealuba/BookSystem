@@ -278,6 +278,9 @@ function deleteComment(obj) {
 function updateComment(obj) {
     obj = obj.parent().parent().parent().parent();
     var commenttext = prompt("修改评论内容：");
+    if (commenttext === null){
+    	return;
+	}
     commenttext = {
         "commentText":commenttext,
         "commentId":obj.children(".panel-heading").children(".hidden").text()

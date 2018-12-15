@@ -1,20 +1,32 @@
 package entity;
 
 import java.io.Serializable;
+import java.sql.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 public class Cart implements Serializable {
-    private static final long serialVersionUID = 5670524409292508719L;
+    private int borrowId;
+    private String bookId;
     private String userId;
-    private Map<String, Integer> book = new HashMap<>();
+    private Date startTime;
+    private Date finishTime;
+    private int flag;
 
-    public Cart() {
+    public int getBorrowId() {
+        return borrowId;
     }
 
-    public Cart(String userId, Map<String, Integer> book) {
-        this.userId = userId;
-        this.book = book;
+    public void setBorrowId(int borrowId) {
+        this.borrowId = borrowId;
+    }
+
+    public String getBookId() {
+        return bookId;
+    }
+
+    public void setBookId(String bookId) {
+        this.bookId = bookId;
     }
 
     public String getUserId() {
@@ -25,11 +37,27 @@ public class Cart implements Serializable {
         this.userId = userId;
     }
 
-    public Map<String, Integer> getBook() {
-        return book;
+    public Date getStartTime() {
+        return startTime;
     }
 
-    public void setBook(Map<String, Integer> book) {
-        this.book = book;
+    public void setStartTime(Date startTime) {
+        this.startTime = startTime;
+    }
+
+    public Date getFinishTime() {
+        return finishTime;
+    }
+
+    public void setFinishTime(Date finishTime) {
+        this.finishTime = finishTime;
+    }
+
+    public int getFlag() {
+        return flag;
+    }
+
+    public void setFlag(int flag) {
+        this.flag = flag;
     }
 }
