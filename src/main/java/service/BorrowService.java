@@ -23,4 +23,6 @@ public interface BorrowService {
     public boolean deleteCart(int borrowId);
 
     public boolean backBooks(List<Borrow> borrows);
+
+    public void checkFlag(String userId);
 }

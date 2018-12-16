@@ -41,10 +41,6 @@ public class LoginSuccessServlet extends HttpServlet {
         user = factory.ServiceFactory.getUserServiveImpl().findUserById(request.getParameter("userId"));
         request.getSession().setAttribute("user",user);
         response.sendRedirect(request.getContextPath()+"/jsp/index.jsp");
-
-
-
-
     }
 
     /**

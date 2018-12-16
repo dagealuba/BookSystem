@@ -5,7 +5,9 @@ import entity.Borrow;
 import factory.DaoFactory;
 import service.BorrowService;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class BorrowServiceImpl implements BorrowService {
@@ -89,5 +91,23 @@ public class BorrowServiceImpl implements BorrowService {
         }
 //        System.out.println(n);
         return n == borrows.size();
+    }
+
+    @Override
+    public void checkFlag(String userId) {
+        List<Borrow> borrows = this.getBackByUserId(userId);
+
+        SimpleDateFormat simpleDateFormat1 = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = new Date();
+        String now = simpleDateFormat1.format(date);
+//        System.out.println(date);
+        for (Borrow borrow: borrows){
+            String finishTime = simpleDateFormat1.format(borrow.getFinishTime());
+
+            if (finishTime.compareTo(now)<0){
+                borrow.setFlag(3);
+                DaoFactory.getBorrowDaoImpl().updateBorrow(borrow);
+            }
+        }
     }
 }

@@ -53,6 +53,7 @@ public class LoginServlet extends HttpServlet {
 				request.getSession().setAttribute("user",user);
 //				System.out.println(userPassword.equals(user.getUserPassword()));
 
+				ServiceFactory.getBorrowServiceImpl().checkFlag(userId);
 				out.write("true");
 			}
 			else {

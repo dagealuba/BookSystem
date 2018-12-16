@@ -76,6 +76,14 @@ public class BorrowDaoImpl extends baseDao implements BorrowDao {
         return this.executeUpdate(sql,params)>0;
     }
 
+    public boolean updateBorrow(Borrow borrow){
+        String sql = "update borrow set flag = ? where borrowId = ?";
+        Object[] params = {borrow.getFlag(),borrow.getBorrowId()};
+
+        return this.executeUpdate(sql,params)>0;
+    }
+
+
     @Override
     public boolean backBook(Borrow borrow) {
 //       Borrow borrow = getBorrowsByBorrowId(borrowId);

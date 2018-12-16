@@ -2,6 +2,7 @@ package servlet;
 
 import java.io.IOException;
 //import java.io.PrintWriter;
+import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -53,17 +54,19 @@ public class RegistServlet extends HttpServlet {
 		User user = new User(userId, userName, userPassword, userEmail, userType);
 		List<User> users = new ArrayList<User>();
 		users.add(user);
+		PrintWriter out = response.getWriter();
 		if (ServiceFactory.getUserServiveImpl().findUserById(userId) == null) {
 			System.out.println("无重复用户id");
 			if (ServiceFactory.getUserServiveImpl().insert(users)) {
 				System.out.println("注册成功");
-				request.getRequestDispatcher("/LoginServlet").forward(request, response);
+				out.write("true");
 			}
-
+			else out.write("false");
 		}
-		else response.sendRedirect(request.getContextPath()+"/jsp/index.jsp");
+		else out.write("id-error");
 		
-		
+		out.flush();
+		out.close();
 		
 	}
 
