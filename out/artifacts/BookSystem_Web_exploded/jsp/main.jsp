@@ -23,52 +23,32 @@
 		<div class = "navbar-header" style = "margin-left:2%">
 			<a class = "navbar-brand" href = "findbooks.jsp" target="iframe">BookSystem</a>
 		</div>
-		
+
 		<div>
 			<ul class = "nav navbar-nav">
-				<li><a href = "findbooks.jsp" target="iframe">看书</a></li>
-				
+				<li><a href="findbooks.jsp" target="iframe">看书</a></li>
+                <li><a href="cart.jsp"     target="iframe">购物车</a></li>
+
 				<li style = "position:absolute;margin-left:77%">
 					<a style = "font-size:10px;" class = "dropdown-toggle" data-toggle = "dropdown">
 					<span class = "glyphicon glyphicon-user"></span> <%=userName %></a>
-					
+
 					<ul class = "dropdown-menu" style = "font-size:10px;">
 						<li><a  data-toggle="modal" data-target="#myMessage">个人信息   <span class = "glyphicon glyphicon-th"></span></a></li>
 						<%if (userType == 2){ %>
 							<li><a href="setup.jsp" target="iframe">系统管理 <span class = "glyphicon glyphicon-cog"></span></a></li>
 						<%} %>
 						<li><a href = "../LogoutServlet">注销   <span class = "glyphicon glyphicon-log-out"></span></a></li>
-						
+
 					</ul>
 				</li>
 			</ul>
 		</div>
 		</div>
 	</nav>
-	
+
 	<iframe id = "iframe" name ="iframe" src = "findbooks.jsp" width="100%" style="border:none" height="590px"></iframe>
 
-    <div id="showcart">
-        <button type="button" class="btn btn-success btn-block" data-toggle="modal" href="#my-cart">
-            <span class="glyphicon glyphicon-shopping-cart"></span>
-        </button>
-    </div>
-
-    <div class="modal fade" id="my-cart" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                    <h4>购物车</h4>
-                </div>
-                <div class="modal-body">
-
-                </div>
-                <%--<div class="modal-footer">--%>
-                <%--</div>--%>
-            </div><!-- /.modal-content -->
-        </div><!-- /.modal-dialog -->
-    </div>
 
     <div class="modal fade" id="myMessage" tabindex="-1" role="dialog" aria-hidden="true">
 		<div class="modal-dialog">

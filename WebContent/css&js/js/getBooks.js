@@ -156,7 +156,19 @@ function printPages(pages,i){
 
 		//添加至购物车
 		$(".glyphicon-plus").click(function () {
+			var id = $(this).parent().parent().children(".hidden").text();
+			id = {
+				"bookId":id
+			}
 
+			$.ajax({
+				type:"post",
+				data:id,
+				url:"/BookSystem/CartServlet1",
+				success:function (data) {
+					// alert(data);
+				}
+			})
         });
 	}
 

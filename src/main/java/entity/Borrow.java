@@ -8,7 +8,7 @@ public class Borrow {
     private String userId;//用户id
     private Date startTime;//借出时间
     private Date finishTime;//还书时间
-    private int flag;//还书状态
+    private int flag;//还书状态 0--未借出 1--借出未到时 2--逾期已还 3--逾期未还 4--已还
 
     public Borrow(){
 

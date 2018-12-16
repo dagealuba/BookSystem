@@ -33,15 +33,6 @@
 		<li>
 			<a href="#book_setup" data-toggle="tab">书籍管理
 			</a>
-			
-			 <%--<ul class="dropdown-menu" role="menu" aria-labelledby="bookSetup">--%>
-			 	<%--<li>--%>
-			 		<%--<a href = "#addBooks" data-toggle="tab">增加书籍</a>--%>
-			 	<%--</li>--%>
-			 	<%--<li>--%>
-			 		<%--<a href = "#update_Books" data-toggle="tab">修改书籍</a>--%>
-			 	<%--</li>--%>
-			 <%--</ul>--%>
 		</li>
 	</ul>
 	</div>
