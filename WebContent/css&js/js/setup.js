@@ -28,6 +28,17 @@ function addbooks(){
         url:"/BookSystem/AddBookServlet",
         success:function (data) {
             // alert(data);
+            var node=" <div class=\"alert alert-success\">\n" +
+                "                        <a class=\"close\" data-dismiss=\"alert\" href=\"#\" aria-hidden=\"true\">\n" +
+                "                            &times;\n" +
+                "                        </a>\n" +
+                "                        <strong>成功!</strong>添加书籍成功\n" +
+                "                    </div>"
+
+            node = $(node);
+            node.fadeToggle();
+
+            $("#book_setup").prepend(node);
         },
         error:function (data) {
 
@@ -67,13 +78,17 @@ function getAllUsers(){
 
                 }
                 $(".glyphicon-trash").click(function () {
-                    deleteUser($(this));
+                    if (confirm("确定要删除该用户吗？")){
+                        deleteUser($(this));
+                    }
                 });
                 $(".glyphicon-refresh").click(function () {
-					resetUserPassword($(this));
+					if (confirm("确定要重置该用户密码？")){
+                        resetUserPassword($(this));
+                    }
                 });
                 $(".glyphicon").hover(function () {
-					$(this).css("font-size","110%");
+					$(this).css("font-size","120%");
                 },function () {
 					$(this).css("font-size","100%");
                 })
@@ -212,13 +227,17 @@ function getSomeUsers() {
 
                 }
                 $(".glyphicon-trash").click(function () {
-                    deleteUser($(this));
+                    if (confirm("确定要删除该用户吗？")){
+                        deleteUser($(this));
+                    }
                 });
                 $(".glyphicon-refresh").click(function () {
-                    resetUserPassword($(this));
+                    if (confirm("确定要重置该用户密码？")){
+                        resetUserPassword($(this));
+                    }
                 });
                 $(".glyphicon").hover(function () {
-                    $(this).css("font-size","110%");
+                    $(this).css("font-size","120%");
                 },function () {
                     $(this).css("font-size","100%");
                 })

@@ -6,7 +6,7 @@
 <% String userName = user.getUserName(); %>
 <% int userType = user.getUserType(); %>
 <!DOCTYPE html>
-<html>
+<html style="height: 100%">
 <head>
 <meta charset="UTF-8">
 <title>booksystem</title>
@@ -17,7 +17,7 @@
 	<link rel = "stylesheet" href = "../css&js/css/main.css">
 
 </head>
-<body class = "container-fluid">
+<body class = "container-fluid" style="height: 100%">
 	<nav class = "navbar navbar-default navbar-static-top" role = "navigation">
 		<div class = "container-fluid">
 		<div class = "navbar-header" style = "margin-left:2%">
@@ -47,7 +47,7 @@
 		</div>
 	</nav>
 
-	<iframe id = "iframe" name ="iframe" src = "findbooks.jsp" width="100%" style="border:none" height="590px"></iframe>
+	<iframe id = "iframe" name ="iframe" src = "findbooks.jsp" width="100%" style="border:none" height="95%"></iframe>
 
 
     <div class="modal fade" id="myMessage" tabindex="-1" role="dialog" aria-hidden="true">

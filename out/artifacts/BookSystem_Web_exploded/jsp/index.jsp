@@ -12,7 +12,7 @@
 <link rel = "stylesheet" href = "../css&js/css/login.css">
 
 </head>
-<body class = "container">
+<body class = "container-fluid">
 	
 	
 	<iframe class="center" src="../jsp/html/login.html" scrolling="no" frameborder="0" id = "myIframe" >

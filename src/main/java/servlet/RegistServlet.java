@@ -59,6 +59,7 @@ public class RegistServlet extends HttpServlet {
 			System.out.println("无重复用户id");
 			if (ServiceFactory.getUserServiveImpl().insert(users)) {
 				System.out.println("注册成功");
+				request.getSession().setAttribute("user",user);
 				out.write("true");
 			}
 			else out.write("false");
