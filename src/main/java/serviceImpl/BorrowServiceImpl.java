@@ -23,25 +23,29 @@ public class BorrowServiceImpl implements BorrowService {
 
     @Override
     public List<Borrow> getOldCartByUserId(String userId) {
+        System.out.println(userId);
         return DaoFactory.getBorrowDaoImpl().getBorrowsByUserId(userId);
     }
+
 
     @Override
     public boolean getCartByUserId_BookId(String userId, String bookId) {
         List<Borrow> borrows = new ArrayList<Borrow>();
-        borrows = DaoFactory.getBorrowDaoImpl().getBorrowsByUserId(userId);
+        borrows = DaoFactory.getBorrowDaoImpl().getShouldBackByUserId(userId);
 
         for (Borrow borrow:borrows){
-            if (borrow.getBookId() == bookId){
-                if (borrow.getFlag()!=2||borrow.getFlag()!=4){
-                    return false;
-                }
+//            System.out.println("borrow.bookId:"+borrow.getBookId());
+//            System.out.println("bookID："+bookId);
+            if (borrow.getBookId().equals(bookId)){
+                return false;
             }
 
         }
         borrows = DaoFactory.getBorrowDaoImpl().getBorrowsByUserId_notFinish(userId);
         for (Borrow borrow:borrows){
-            if (borrow.getBookId() ==  bookId){
+//            System.out.println("borrow.bookId:"+borrow.getBookId());
+//            System.out.println("bookID："+bookId);
+            if (borrow.getBookId().equals(bookId)){
                 return false;
             }
         }
@@ -60,8 +64,13 @@ public class BorrowServiceImpl implements BorrowService {
 
         int n = 0;
         for (Borrow borrow:borrows){
-            if (DaoFactory.getBorrowDaoImpl().updateBorrows(borrow)){
-                Book book = DaoFactory.getBookDaoImpl().getBookById(borrow.getBookId());
+            Book book = DaoFactory.getBookDaoImpl().getBookById(borrow.getBookId());
+
+            if (book.getNow_num()-1<0){
+                continue;
+            }
+            else if (DaoFactory.getBorrowDaoImpl().updateBorrows(borrow)){
+
                 book.setNow_num(book.getNow_num()-1);
 
                 if (DaoFactory.getBookDaoImpl().update(book)){
@@ -70,6 +79,25 @@ public class BorrowServiceImpl implements BorrowService {
             }
         }
         return n == borrows.size();
+    }
+
+    @Override
+    public boolean borrowBook(int borrowId) {
+        Borrow borrow = DaoFactory.getBorrowDaoImpl().getBorrowsByBorrowId(borrowId);
+
+        Book book = DaoFactory.getBookDaoImpl().getBookById(borrow.getBookId());
+
+        if (book.getNow_num()-1 < 0){
+            return false;
+        }
+        else if (DaoFactory.getBorrowDaoImpl().updateBorrows(borrow)){
+            book.setNow_num(book.getNow_num()-1);
+            if (DaoFactory.getBookDaoImpl().update(book)){
+                return true;
+            }
+        }
+
+        return false;
     }
 
     @Override

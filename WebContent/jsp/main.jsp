@@ -5,6 +5,7 @@
 <% User user = (User)request.getSession().getAttribute("user");%>
 <% String userName = user.getUserName(); %>
 <% int userType = user.getUserType(); %>
+
 <!DOCTYPE html>
 <html style="height: 100%">
 <head>
@@ -19,17 +20,17 @@
 </head>
 <body class = "container-fluid" style="height: 100%">
 	<nav class = "navbar navbar-default navbar-static-top" role = "navigation">
-		<div class = "container-fluid">
+		<div class = "container">
 		<div class = "navbar-header" style = "margin-left:2%">
 			<a class = "navbar-brand" href = "findbooks.jsp" target="iframe">BookSystem</a>
 		</div>
 
 		<div>
-			<ul class = "nav navbar-nav">
+			<ul class = "nav navbar-nav" style="width: 87%;">
 				<li><a href="findbooks.jsp" target="iframe">看书</a></li>
                 <li><a href="cart.jsp"     target="iframe">购物车</a></li>
 
-				<li style = "position:absolute;margin-left:77%">
+				<li class="pull-right">
 					<a style = "font-size:10px;" class = "dropdown-toggle" data-toggle = "dropdown">
 					<span class = "glyphicon glyphicon-user"></span> <%=userName %></a>
 
@@ -49,6 +50,7 @@
 
 	<iframe id = "iframe" name ="iframe" src = "findbooks.jsp" width="100%" style="border:none" height="95%"></iframe>
 
+    <%--<input class="hidden" value="<%%>">--%>
 
     <div class="modal fade" id="myMessage" tabindex="-1" role="dialog" aria-hidden="true">
 		<div class="modal-dialog">
@@ -145,6 +147,24 @@
 		</div>
 	</div>
 
+    <%--<div class="modal fade" id="input-password" tabindex="-1" role="dialog" aria-hidden="false">--%>
+        <%--<div class="modal-dialog">--%>
+            <%--<div class="modal-content">--%>
+                <%--<div class="modal-body">--%>
+                    <%--<form role="form" class="form-inline">--%>
+                        <%--<div class="form-group">--%>
+                            <%--<label> 请输入你的密码:</label>--%>
+                            <%--<input type="password" class="form-control" id="password-input" value="">--%>
+                        <%--</div>--%>
+                        <%--<div class="form-group">--%>
+                            <%--<button id="return" type="button" class="btn btn-danger">取消</button>--%>
+                            <%--<button id="ok" type="button" class="btn btn-success">确定</button>--%>
+                        <%--</div>--%>
+                    <%--</form>--%>
+                <%--</div>--%>
+            <%--</div>--%>
+        <%--</div>--%>
+    <%--</div>--%>
 	<!-- js -->
 	<script type="text/javascript" src = "../bootstrap-3.3.7/js/bootstrap.min.js"></script>
 	<script type="text/javascript" src = "../css&js/js/main.js"></script>

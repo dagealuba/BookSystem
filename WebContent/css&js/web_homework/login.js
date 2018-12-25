@@ -45,7 +45,6 @@ $(document).ready(function () {
                 }
             },
             is_num:function (value,item) {
-                if ()
             }
         });
         $("#rePassword").change(function () {

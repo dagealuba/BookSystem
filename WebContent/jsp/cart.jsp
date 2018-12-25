@@ -22,8 +22,8 @@
         }
     </style>
 </head>
-<body>
-    <div style="width:15%;position:fixed">
+<body class="container">
+    <div style="width:10%;position:fixed">
         <ul id = "menu" class = "nav nav-tab">
             <li>
                 <a id="to-cart-page" href="#cart-page" data-toggle="tab">购物车</a>

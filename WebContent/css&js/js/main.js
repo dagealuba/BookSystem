@@ -18,7 +18,8 @@ function switch_page(){
 
 //修改按钮
 function pencil_btn(){
-    var password=prompt("输入密码：")
+    // $("#input-password").modal();
+    var password=prompt("输入密码：");
     // var user = {
     //     "userId":$("#userId").val(),
     //     "userPassword":password,

@@ -19,6 +19,7 @@ public interface BorrowService {
     //借阅图书
     public boolean borrowBooks(String userId);
 
+    public boolean borrowBook(int borrowId);
     //删除订单记录
     public boolean deleteCart(int borrowId);
 

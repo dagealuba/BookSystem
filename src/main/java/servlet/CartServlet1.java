@@ -28,14 +28,17 @@ public class CartServlet1 extends HttpServlet {
 
         PrintWriter out = response.getWriter();
         if (ServiceFactory.getBorrowServiceImpl().getCartByUserId_BookId(user.getUserId(),bookId)){
-            Borrow borrow = new Borrow();
-            borrow.setBookId(bookId);
-            borrow.setUserId(user.getUserId());
-            if (ServiceFactory.getBorrowServiceImpl().addToCart(borrow)){
-                out.write("true");
+            if (ServiceFactory.getBookServiceImpl().findBookById(bookId).getNow_num()>0){
+                Borrow borrow = new Borrow();
+                borrow.setBookId(bookId);
+                borrow.setUserId(user.getUserId());
+                if (ServiceFactory.getBorrowServiceImpl().addToCart(borrow)){
+                    out.write("true");
+                }
+                else out.write("false");
             }
             else {
-                out.write("false");
+                out.write("no-book");
             }
         }
         else out.write("already-borrow");

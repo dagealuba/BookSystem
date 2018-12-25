@@ -16,7 +16,7 @@ public class BorrowDaoImpl extends baseDao implements BorrowDao {
     @Override
     public List<Borrow> getBorrowsByUserId(String userId) {
         List<Borrow> borrows = new ArrayList<Borrow>();
-        String sql = "select * from borrow where userId = ? and flag = 2 or flag = 4 order by startTime asc";
+        String sql = "select * from borrow where userId = ? and (flag = 2 or flag = 4) order by startTime asc";
 
         return getBorrows(userId, borrows, sql);
     }
@@ -32,7 +32,7 @@ public class BorrowDaoImpl extends baseDao implements BorrowDao {
     @Override
     public List<Borrow> getShouldBackByUserId(String userId) {
         List<Borrow> borrows = new ArrayList<Borrow>();
-        String sql = "select * from borrow where userId = ? and flag = 1 or flag = 3 order by startTime asc";
+        String sql = "select * from borrow where userId = ? and (flag = 1 or flag = 3) order by startTime asc";
 
         return getBorrows(userId, borrows, sql);
     }
@@ -91,10 +91,10 @@ public class BorrowDaoImpl extends baseDao implements BorrowDao {
        String sql;
 
        if (borrow.getFlag()==3){
-           sql = "update borrow set flag = 2 where borrowId = ?";
+           sql = "update borrow set flag = 2, finishTime = now() where borrowId = ?";
        }
        else {
-           sql = "update borrow set flag = 4 where borrowId = ?";
+           sql = "update borrow set flag = 4, finishTime = now() where borrowId = ?";
        }
 
        Object[] params = {borrow.getBorrowId()};

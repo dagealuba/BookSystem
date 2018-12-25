@@ -55,7 +55,7 @@
 	</div>
 	
 	<div class = "row">
-		<table class = "table">
+		<table class = "table" id="book-table">
 		<thead>
 			<tr>
 				<th class="hidden">书籍Id</th>

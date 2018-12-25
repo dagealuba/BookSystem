@@ -23,8 +23,8 @@
 </style>
 
 </head>
-<body>
-	<div style="width:15%;position:fixed">
+<body class="container">
+	<div style="width:10%;position:fixed">
 	<ul id = "menu" class = "nav nav-tab">
 		<li>
 			<a href="#userSetup" data-toggle="tab">用户管理</a>
@@ -110,8 +110,10 @@
 
                 <div class="form-group">
                     <div class="col-xs-6">
-                        <button type="reset" class="btn btn-warning bookbtn" id="reset">重置</button>
-                        <button type="button" class="btn btn-success bookbtn" id="add_books">确定</button>
+						<div class="pull-right">
+							<button type="reset" class="btn btn-warning bookbtn" id="reset">重置</button>
+							<button type="button" class="btn btn-success bookbtn" id="add_books">确定</button>
+						</div>
                     </div>
                 </div>
             </form>

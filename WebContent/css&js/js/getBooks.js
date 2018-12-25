@@ -107,7 +107,16 @@ function printPages(pages,i){
 		var price = pages[i-1][j].bookPrice;
 		var now_num = pages[i-1][j].now_num;
 		var publishName = pages[i-1][j].publishName;
-		var button = "<td><span class='glyphicon glyphicon-plus' data-toggle='tooltip' title='添加置购物车'></span><span class='glyphicon glyphicon-comment' data-toggle='tooltip' title='查看评论'></span></td>"
+		if ($("#user-type").val()>1){
+			var button = "<td>" +
+				"<span class='glyphicon glyphicon-plus' data-toggle='tooltip' title='添加置购物车'></span>" +
+				"<span class='glyphicon glyphicon-comment' data-toggle='tooltip' title='查看评论'></span>" +
+				"<span class='glyphicon glyphicon-trash' data-toggle='tooltip' title='删除书籍'></span>" +
+				"</td>";
+		}
+		else
+			var button = "<td><span class='glyphicon glyphicon-plus' data-toggle='tooltip' title='添加置购物车'></span><span class='glyphicon glyphicon-comment' data-toggle='tooltip' title='查看评论'></span></td>";
+
 		node += "<tr><td class='hidden'>"+id+"</td><td>"+name+"</td>";
 		node += "<td>"+author+"</td>";
 		node += "<td>"+publishName+"</td>";
@@ -166,7 +175,106 @@ function printPages(pages,i){
 				data:id,
 				url:"/BookSystem/CartServlet1",
 				success:function (data) {
-					// alert(data);
+				    // alert($("#book-table").parent().children(".alert").html());
+				    if ($("#book-table").parent().children(".alert").html() != undefined){
+                        $("#book-table").parent().children(".alert").fadeOut(200,function () {
+                            if (data === "true"){
+                                var node=" <div class=\"alert alert-success\">\n" +
+                                    "                        <a class=\"close\" data-dismiss=\"alert\" href=\"#\" aria-hidden=\"true\">\n" +
+                                    "                            &times;\n" +
+                                    "                        </a>\n" +
+                                    "                        添加成功\n" +
+                                    "                    </div>"
+                                node=$(node);
+                                node.fadeToggle();
+                                $("#book-table").before(node);
+
+                            }
+                            else if (data === "no-book"){
+
+                                var node=" <div class=\"alert alert-warning\">\n" +
+                                    "                        <a class=\"close\" data-dismiss=\"alert\" href=\"#\" aria-hidden=\"true\">\n" +
+                                    "                            &times;\n" +
+                                    "                        </a>\n" +
+                                    "                        书籍库存不够\n" +
+                                    "                    </div>"
+                                node=$(node);
+                                node.fadeToggle();
+                                $("#book-table").before(node);
+                            }
+                            else if (data === "already-borrow"){
+                                var node=" <div class=\"alert alert-warning\">\n" +
+                                    "                        <a class=\"close\" data-dismiss=\"alert\" href=\"#\" aria-hidden=\"true\">\n" +
+                                    "                            &times;\n" +
+                                    "                        </a>\n" +
+                                    "                        请勿重复添加\n" +
+                                    "                    </div>"
+                                node=$(node);
+                                node.fadeToggle();
+                                $("#book-table").before(node);
+                            }
+                            else {
+                                var node=" <div class=\"alert alert-danger\">\n" +
+                                    "                        <a class=\"close\" data-dismiss=\"alert\" href=\"#\" aria-hidden=\"true\">\n" +
+                                    "                            &times;\n" +
+                                    "                        </a>\n" +
+                                    "                        添加失败，请稍后重试\n" +
+                                    "                    </div>"
+                                node=$(node);
+                                node.fadeToggle();
+                                $("#book-table").before(node);
+                            }
+                        });
+                    }
+				    else {
+                        if (data === "true"){
+                            var node=" <div class=\"alert alert-success\">\n" +
+                                "                        <a class=\"close\" data-dismiss=\"alert\" href=\"#\" aria-hidden=\"true\">\n" +
+                                "                            &times;\n" +
+                                "                        </a>\n" +
+                                "                        添加成功\n" +
+                                "                    </div>"
+                            node=$(node);
+                            node.fadeToggle();
+                            $("#book-table").before(node);
+
+                        }
+                        else if (data === "no-book"){
+
+                            var node=" <div class=\"alert alert-warning\">\n" +
+                                "                        <a class=\"close\" data-dismiss=\"alert\" href=\"#\" aria-hidden=\"true\">\n" +
+                                "                            &times;\n" +
+                                "                        </a>\n" +
+                                "                        书籍库存不够\n" +
+                                "                    </div>"
+                            node=$(node);
+                            node.fadeToggle();
+                            $("#book-table").before(node);
+                        }
+                        else if (data === "already-borrow"){
+                            var node=" <div class=\"alert alert-warning\">\n" +
+                                "                        <a class=\"close\" data-dismiss=\"alert\" href=\"#\" aria-hidden=\"true\">\n" +
+                                "                            &times;\n" +
+                                "                        </a>\n" +
+                                "                        请勿重复添加\n" +
+                                "                    </div>"
+                            node=$(node);
+                            node.fadeToggle();
+                            $("#book-table").before(node);
+                        }
+                        else {
+                            var node=" <div class=\"alert alert-danger\">\n" +
+                                "                        <a class=\"close\" data-dismiss=\"alert\" href=\"#\" aria-hidden=\"true\">\n" +
+                                "                            &times;\n" +
+                                "                        </a>\n" +
+                                "                        添加失败，请稍后重试\n" +
+                                "                    </div>"
+                            node=$(node);
+                            node.fadeToggle();
+                            $("#book-table").before(node);
+                        }
+                    }
+
 				}
 			})
         });

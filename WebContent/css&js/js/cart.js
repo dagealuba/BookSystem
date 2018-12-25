@@ -62,10 +62,10 @@ function printHistory(data) {
         var finishTime = RiQi(data.borrows[i].finishTime);
         var flag = "";
         if (data.borrows[i].flag == 2){
-            flag = "<td>逾期<span class='glyphicon glyphicon-remove'></span></td>"
+            flag = "<td style='color: red'>逾期<span class='glyphicon glyphicon-remove'></span></td>"
         }
         else if (data.borrows[i].flag == 4){
-            flag = "<td>未逾期<span class='glyphicon glyphicon-ok'></span></td>"
+            flag = "<td style='color: green'>未逾期<span class='glyphicon glyphicon-ok'></span></td>"
         }
         var node = "<tr><td class='hidden'>"+data.books[i].bookId+"</td>" +
             "<td>"+data.books[i].bookName+"</td>" +
@@ -87,20 +87,35 @@ function printNewBorrow(data) {
         var node = "<tr><td class='hidden'>"+data.books[i].bookId+"</td>" +
             "<td>"+data.books[i].bookName+"</td>" +
             "<td>"+startTime+"</td>" +
-            "<td>"+1+"</td><td>"+finishTime+"</td><td><span class='glyphicon glyphicon-remove'></span></td></tr>";
+            "<td>"+1+"</td><td>"+finishTime+"</td><td><span id='"+data.borrows[i].borrowId+"' class='glyphicon glyphicon-remove' data-toggle='tooltip' title='删除订单'></span></td></tr>";
         node = $(node);
         node.fadeToggle();
         $("#borrow tbody").prepend(node);
+
+        $(node).click(function () {
+            if (confirm("确定要借阅该书籍？")){
+                borrowThisBook($(this));
+            }
+        });
     }
 
-    var node = "<button  class='btn btn-success btn-sm' style='margin-left: 92%'>借阅</button>"
-    node = $(node);
-    node.fadeToggle();
-    $("#borrow .table-foot").prepend(node);
 
-    node.click(function () {
-        borrowBooks();
+
+    $(".glyphicon-remove").click(function () {
+        deleteBorrow($(this));
     })
+    if (data.borrows.length>0){
+        var node = "<button  class='btn btn-success btn-sm' style='margin-left: 92%'>借阅</button>"
+        node = $(node);
+        node.fadeToggle();
+        $("#borrow .table-foot").prepend(node);
+
+        node.click(function () {
+            borrowBooks();
+        })
+    }
+
+
 }
 
 function printBackBorrow(data) {
@@ -143,12 +158,64 @@ function printBackBorrow(data) {
     })
 }
 
+function borrowThisBook(obj) {
+    var borrowId = {
+        "borrowId":obj.children("td:last-child").children().attr("id")
+    };
+
+    // alert(borrowId.borrowId);
+    $.ajax({
+        type:"get",
+        url:"/BookSystem/CartServlet4",
+        data:borrowId,
+        success:function (data) {
+            if (data === "true"){
+                var ok=" <div class=\"alert alert-success\">\n" +
+                    "                        <a class=\"close\" data-dismiss=\"alert\" href=\"#\" aria-hidden=\"true\">\n" +
+                    "                            &times;\n" +
+                    "                        </a>\n" +
+                    "                        借阅成功\n" +
+                    "                    </div>"
+                ok=$(ok);
+                ok.fadeToggle(1000,function () {
+                    ok.fadeOut(1000);
+                });
+                $("#borrow").prepend(ok);
+                obj.fadeOut();
+            }
+            else {
+                var ok=" <div class=\"alert alert-danger\">\n" +
+                    "                        <a class=\"close\" data-dismiss=\"alert\" href=\"#\" aria-hidden=\"true\">\n" +
+                    "                            &times;\n" +
+                    "                        </a>\n" +
+                    "                        借阅出错，请联系管理员\n" +
+                    "                    </div>"
+                ok=$(ok);
+                ok.fadeToggle(2000,function () {
+                    ok.fadeOut(1000);
+                });
+                $("#borrow").prepend(ok);
+            }
+        }
+    })
+}
 function borrowBooks() {
     $.ajax({
         url: "/BookSystem/CartServlet2",
         type:"post",
         success:function (data) {
             if (data == "true"){
+                var ok=" <div class=\"alert alert-success\">\n" +
+                    "                        <a class=\"close\" data-dismiss=\"alert\" href=\"#\" aria-hidden=\"true\">\n" +
+                    "                            &times;\n" +
+                    "                        </a>\n" +
+                    "                        借阅成功\n" +
+                    "                    </div>"
+                ok=$(ok);
+                ok.fadeToggle(1000,function () {
+                    ok.fadeOut(1000);
+                });
+                $("#borrow").prepend(ok);
                 getNewBorrow();
             }
         }
@@ -188,6 +255,31 @@ function backBook(obj) {
     }
 }
 
+
+function deleteBorrow(obj) {
+    var id = {
+        "borrowId":obj.attr("id")
+    }
+    var tr = obj.parent().parent();
+    if (confirm("确定要删除该订单？")){
+        $.ajax({
+            type:"post",
+            url:"/BookSystem/CartServlet4",
+            data:id,
+            success:function (data) {
+                if (data === "true"){
+                    tr.fadeOut(300,function () {
+                        if ($("#borrow table tbody").children().length == 0){
+                            $("#borrow table .table-foot").children().fadeOut();
+                        }
+
+                    });
+                }
+
+            }
+        })
+    }
+}
 
 
 function RiQi(sj) {
