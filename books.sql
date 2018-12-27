@@ -16,7 +16,7 @@ drop trigger if exists `return`;
 DELIMITER $$
 USE `booksystem`$$
 create trigger `return`
-after insert on `booksystem`.`borrow`
+after  on `booksystem`.`borrow`
 for each row
 begin 
 update `booksystem`.`books` set `now_num`=`now_num` +1
