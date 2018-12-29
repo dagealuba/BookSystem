@@ -16,11 +16,11 @@ drop trigger if exists `return`;
 DELIMITER $$
 USE `booksystem`$$
 create trigger `return`
-after  on `booksystem`.`borrow`
+after delete on `booksystem`.`borrow`
 for each row
 begin 
 update `booksystem`.`books` set `now_num`=`now_num` +1
-where `bookId`=new.`bookId`;
+where `bookId`=old.`bookId`;
 END$$
 
 DELIMITER ;
