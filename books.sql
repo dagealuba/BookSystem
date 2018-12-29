@@ -6,8 +6,10 @@ create trigger `borrow`
 after insert on `booksystem`.`borrow`
 for each row
 begin 
+if new.`flag`='1' then
 update `booksystem`.`books` set `now_num`=`now_num` -1
 where `bookId`=new.`bookId`;
+end if;
 END$$
 
 DELIMITER ;
@@ -18,9 +20,11 @@ USE `booksystem`$$
 create trigger `return`
 after delete on `booksystem`.`borrow`
 for each row
-begin 
+begin
+if old.`flag`='1' then
 update `booksystem`.`books` set `now_num`=`now_num` +1
 where `bookId`=old.`bookId`;
+end if;
 END$$
 
 DELIMITER ;
